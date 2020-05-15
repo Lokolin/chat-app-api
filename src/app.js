@@ -36,7 +36,7 @@ socketIo.on("connection", (socket) => {
     socket.broadcast.emit("server:message", data);
   });
 
-  socket.on("client:getAllMessages", (data) => {
+  socket.on("getAllMessages", (data) => {
     console.log(`${data.username} wants to get all messages`);
 
     // socketIo.sockets.socket(socketID).emit("server:allMessage", messages);
