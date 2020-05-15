@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 
 const socketIo = io(server);
-
+let messages = [];
 // Allow CORS
 app.use(cors());
 
@@ -26,6 +26,7 @@ console.log(`Started on port ${config.port}`);
 // Setup socket.io
 socketIo.on("connection", (socket) => {
   const username = socket.handshake.query.username;
+  const socketID = socket.id;
   console.log(`${username} connected`);
 
   socket.on("client:message", (data) => {
@@ -33,6 +34,14 @@ socketIo.on("connection", (socket) => {
 
     // message received from client, now broadcast it to everyone else
     socket.broadcast.emit("server:message", data);
+  });
+
+  socket.on("client:getAllMessages", (data) => {
+    console.log(`${data.username} wants to get all messages`);
+
+    // socketIo.sockets.socket(socketID).emit("server:allMessage", messages);
+    socketIo.to(socketID).emit("server:check", "hello from server");
+    socket.emit("server:check2", "can you hear me?");
   });
 
   socket.on("disconnect", () => {
